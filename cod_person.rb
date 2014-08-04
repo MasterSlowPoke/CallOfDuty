@@ -82,7 +82,7 @@ class CoDPerson
 	end
 
 	def politics= (alignment)
-		return alignment if alignment.is_a? Symbol
+		return @politics = alignment if alignment.is_a? Symbol
 		return unless alignment.respond_to? :to_s
 
 		@politics = case alignment.to_s.downcase
@@ -133,6 +133,7 @@ class CoDPerson
 end
 
 class CoDPolitician < CoDPerson
+	attr_accessor :active
 	attr_accessor :party
 	attr_accessor :votes
 
@@ -168,6 +169,7 @@ class CoDPolitician < CoDPerson
 		@role = :politician
 		self.party = params[:party]
 		@vote = self
+		@active = true
 	end
 
 	def recieve_stump(*rest)
@@ -187,7 +189,7 @@ class CoDPolitician < CoDPerson
 	end
 
 	def party= (alignment)
-		return alignment if alignment.is_a? Symbol
+		return @party = alignment if alignment.is_a? Symbol
 		return unless alignment.respond_to? :downcase
 		
 		@party = case alignment.downcase

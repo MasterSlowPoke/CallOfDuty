@@ -1,10 +1,47 @@
 module CoDInputVote
 	### VOTE ###
+	def primary_necessary?
+		candidates = {}
+
+		@politicians.each do |name, politician|
+			if politician.active && candidates[politician.party] 
+				return true
+			else
+				candidates[politician.party] = politician
+			end
+		end
+
+		return false
+	end
+
+	def run_campaign(delay = 0.75, primary = false)
+		@politicians.each do |pol_name, politican|
+			puts "#{pol_name}'s campagin begins!"
+			@people.each do |per_name, person|
+				if(politican == person)
+					next
+				end				
+				puts "   #{pol_name} talks to #{per_name}: \"#{politican.give_speach}\""
+				response = person.recieve_stump(politican)
+				sleep delay
+
+				puts "       #{per_name} responds: #{response}"
+				sleep delay
+			end
+			puts ""
+		end
+	end
+
 	def process_vote(delay = 0.75)
 		@politicians = @people.select { |name, person|
 			@people[name].is_a? CoDPolitician
 		}
 
+		if primary_necessary?
+			puts "PRIMARY NECESSARY!"
+		end
+
+		
 		if(@politicians.length == 0)
 			@response = "The last politician is in captivity. The country is at peace."
 			@state_instructions = "No one is a winner!"
@@ -26,21 +63,8 @@ module CoDInputVote
 			return
 		end
 
-		@politicians.each do |pol_name, politican|
-			puts "#{pol_name}'s campagin begins!"
-			@people.each do |per_name, person|
-				if(politican == person)
-					next
-				end				
-				puts "   #{pol_name} talks to #{per_name}: \"#{politican.give_speach}\""
-				response = person.recieve_stump(politican)
-				sleep delay
+		run_campaign
 
-				puts "       #{per_name} responds: #{response}"
-				sleep delay
-			end
-			puts ""
-		end
 		puts "The campagin has ended! Press [Return] to start voting."
 		gets 
 
