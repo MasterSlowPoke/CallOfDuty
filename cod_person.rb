@@ -5,35 +5,36 @@ class CoDPerson
 	attr_accessor :role
 
 	@@random_names = [
-		# "Sarah Stamper",
-		# "Barack Obama",
-		# "Rick Scott",
-		# "Charlie Crist",
-		# "Jeb Bush",
-		# "Joe Biden",
-		# "Ed Toro",
-		# "Craig Sniffen",
-		# "Andy Weiss",
-		# "Hassan Mian",
-		# "Joel Lusky",
-		# "Jose Martinez-Rubio",
-		# "Sam Zorbel",
-		# "Alfonzo Pintos",
-		# "Bayrdo Navarro",
-		# "Bryce Kerley",
-		# "Burt Rosenburg",
-		# "Diego Lugo",
-		# "Eziquiel Politzer",
-		# "Frank Ortiz",
-		# "Jesus Brazon",
-		# "Johanna Mikkola",
-		# "Johnathon Lyons",
-		# "Josh Powell",
-		# "Juancarlo Perez",
-		# "Widney St. Louis",
-		# "Juha Mikkola",
-		# "Bill Clinton",
-		# "Ronald Reagan",
+		"Sarah Stamper",
+		"Barack Obama",
+		"Rick Scott",
+		"Charlie Crist",
+		"Jeb Bush",
+		"Joe Biden",
+		"Ed Toro",
+		"Craig Sniffen",
+		"Andy Weiss",
+		"Hassan Mian",
+		"Joel Lusky",
+		"Jose Martinez-Rubio",
+		"Sam Zorbel",
+		"Alfonzo Pintos",
+		"Bayrdo Navarro",
+		"Bryce Kerley",
+		"Burt Rosenburg",
+		"Diego Lugo",
+		"Eziquiel Politzer",
+		"Frank Ortiz",
+		"Chris Scott",
+		"Jesus Brazon",
+		"Johanna Mikkola",
+		"Johnathon Lyons",
+		"Josh Powell",
+		"Juancarlo Perez",
+		"Widney St. Louis",
+		"Juha Mikkola",
+		"Bill Clinton",
+		"Ronald Reagan",
 	]
 
 	REPUBLICAN_SUCCCESS = {neutral: 50, conservative: 75, liberal: 25, tea_party: 90, socialist: 10}
@@ -156,8 +157,6 @@ class CoDPolitician < CoDPerson
 		"I am looking forward to an orderly election tomorrow, which will eliminate the need for a violent blood bath.",
 	]
 
-	PARTY_NAMES = {democrat: "Democrat", republican: "republican"}
-
 	def initialize(params ={})
 		super
 		@role = :politician
@@ -167,14 +166,17 @@ class CoDPolitician < CoDPerson
 	end
 
 	def recieve_stump(politician, primary = nil)
-		unless primary
+		puts "MyParty #{@party.to_s} - ThePrimary #{primary.to_s}"
+		if primary == @party && active
 			return "I'm running against you!" 			
 		end
+
+		@vote = nil if @vote == self
+
 
 		if primary == @party
 			return "I'm trying to get the nomination myself!"
 		else
-			@vote = nil
 			super
 		end
 	end
@@ -203,6 +205,10 @@ class CoDPolitician < CoDPerson
 		else
 			nil
 		end
+	end
+
+	def active?
+		return @active
 	end
 
 	def reset_vote

@@ -20,13 +20,13 @@ module CoDInputProcessing
 		when :update
 			set_update_state
 		when :vote
-			process_vote
+			set_vote_state
 		when :list
 			set_list_state
 		when :quit
 			set_quit_state
 		else
-			:command_failed
+			:no_command_given
 		end
 	end
 

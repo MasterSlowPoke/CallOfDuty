@@ -34,7 +34,7 @@ module CoDInputUpdate
 		
 	def set_update_person_name_state(input)
 		process_naming(input)
-		@state = :update_person_partisaniization unless @person.name.nil?
+		@state = :update_person_partisanization unless @person.name.nil?
 	end
 
 	def set_update_person_partisaniization(input)

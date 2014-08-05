@@ -13,6 +13,9 @@ class CoDGame
 
 	include CoDInputProcessing
 
+	PARTY_NAMES = {democrat: "Democratic", republican: "Republican"}
+	DELAY = 0.75 
+
 	#set the game to the menu state
 	def initialize
 		@people = {}
@@ -56,8 +59,8 @@ class CoDGame
 			CoDPolitician.Random,
 			CoDPolitician.Random,
 			CoDPolitician.Random,
-			CoDPolitician.Random,
-			CoDPolitician.Random,
+			CoDPolitician.new({name: "The Democrat",party: "1"}),
+			CoDPolitician.new({name: "Republican Man",party: "2"}),
 		]
 		newPeople.each do |person|
 			@people[person.name] = person
@@ -70,28 +73,36 @@ class CoDGame
 		case @state
 		when :menu
 			get_menu_command(input)
-		when :create
+		when :create_person_or_politician
 			get_create_command(input)
 		when :list
 			set_menu_state
 		when :create_person
-			set_create_person_state(input)
+			set_create_person_state(:voter)
+		when :create_politician
+			set_create_person_state(:politician)
+		when :create_person_name
+			set_create_person_name_state(input)
+		when :create_person_partisanization
+			set_create_person_partisanization(input)
 		when :update
 			set_update_person(input)
 		when :update_person
 			set_update_person_state(input)
 		when :update_person_name
 			set_update_person_name_state(input)
-		when :update_person_partisaniization
+		when :update_person_partisanization
 			set_update_person_partisaniization(input)
 		when :vote
-			process_vote
-		when :vote_primary
-			process_primaries
-		when :primary_voting_over
-			process_primary_vote
-		when :voting_over
-			process_voting_over
+			set_vote_state
+		when :vote_primary_stumping
+			set_vote_primary_stumping_state
+		when :vote_primary_election
+			set_vote_primary_election_state
+		when :vote_general_stumping
+			set_vote_general_stumping_state
+		when :vote_general_election
+			set_vote_general_election_state
 		else
 			raise StandardError.new("No commands valid for state:" + @state.to_s)
 		end

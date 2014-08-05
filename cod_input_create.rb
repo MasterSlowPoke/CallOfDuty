@@ -1,33 +1,36 @@
 module CoDInputCreate
 	### CREATE ###
 	def set_create_state
-		@state = :create
 		@response = "Create an individual:"
 		@state_instructions = "What would you like to create? Politician or Person, or Return?"
+		@state = :create_person_or_politician
 	end
 
 	## Similar process for both creates. If a person hasn't been started, create a new one and ask for name. Then, ask for party/politics, 
 	##   add it to the master list, nilify @person, and then send the user back to the menu
-	def set_create_person_state(input = nil)
-		@state = :create_person
-		
-		if (@person.nil?)
-			if (input == :voter)
-				@person = CoDPerson.new
-				@response = "Create a regular voter:"
-				@state_instructions = "The person's name? Leave blank to generate a random voter."
-			else
-				@person = CoDPolitician.new
-				@response = "Create a politician:"
-				@state_instructions = "The politician's name? Leave blank to generate a random politician."
-			end
-
-		elsif @person.name.nil?
-			process_naming(input)
-
+	def set_create_person_state(input)
+		if (input == :voter)
+			@person = CoDPerson.new
+			@response = "Create a regular voter:"
+			@state_instructions = "The person's name? Leave blank to generate a random voter."
 		else
-			process_partisanization(input)
+			@person = CoDPolitician.new
+			@response = "Create a politician:"
+			@state_instructions = "The politician's name? Leave blank to generate a random politician."
 		end
+		@state = :create_person_name
+	end
+
+	def set_create_person_name_state(input)
+		process_naming(input)
+
+		if @person && @person.name  # name is set
+			@state = :create_person_partisanization
+		end
+	end
+
+	def set_create_person_partisanization(input)
+		process_partisanization(input)
 	end
 
 	def process_naming(input)
