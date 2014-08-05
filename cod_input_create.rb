@@ -1,6 +1,6 @@
 module CoDInputCreate
 	### CREATE ###
-	def process_create
+	def set_create_state
 		@state = :create
 		@response = "Create an individual:"
 		@state_instructions = "What would you like to create? Politician or Person, or Return?"
@@ -8,7 +8,7 @@ module CoDInputCreate
 
 	## Similar process for both creates. If a person hasn't been started, create a new one and ask for name. Then, ask for party/politics, 
 	##   add it to the master list, nilify @person, and then send the user back to the menu
-	def process_create_person(input = nil)
+	def set_create_person_state(input = nil)
 		@state = :create_person
 		
 		if (@person.nil?)
@@ -26,7 +26,7 @@ module CoDInputCreate
 			process_naming(input)
 
 		else
-			process_partistanization(input)
+			process_partisanization(input)
 		end
 	end
 
@@ -43,7 +43,7 @@ module CoDInputCreate
 			# result is nil if you run out of names
 			if(result)
 				@person = result
-				process_menu
+				set_menu_state
 				if @person.is_a? CoDPolitician
 					@response = "Politician '#{@person.name}' with party '#{@person.party}' created!"
 				else
@@ -67,11 +67,11 @@ module CoDInputCreate
 		if(@person.role == :voter)
 			@state_instructions = "The person's politicial leanings? You can use the number as a shortcut. \n(1) Liberal, (2) Conservative, (3) Tea Party, (4) Socialist, or (5) Neutral?"
 		else
-			@state_instructions = "The politican's party? You can use the number as a shortcut. \n(1) Democrat or (2) Republican? Do you want to vote third party? Go ahead, throw your vote away!"
+			@state_instructions = "The politician's party? You can use the number as a shortcut. \n(1) Democrat or (2) Republican? Do you want to vote third party? Go ahead, throw your vote away!"
 		end
 	end
 
-	def process_partistanization(input)
+	def process_partisanization(input)
 		responseString = ""
 
 		if(@person.role == :voter)
@@ -91,7 +91,7 @@ module CoDInputCreate
 		end
 
 		# return to the menu state, but with a succssful response string, and add the person to the master list, and delete the temp person
-		process_menu
+		set_menu_state
 		@response = responseString
 
 		@people[@person.name] = @person

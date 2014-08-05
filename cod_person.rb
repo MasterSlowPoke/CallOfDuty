@@ -5,51 +5,35 @@ class CoDPerson
 	attr_accessor :role
 
 	@@random_names = [
-		"Sarah Stamper",
-		"Barack Obama",
-		"Rick Scott",
-		"Charlie Crist",
-		"Jeb Bush",
-		"Joe Biden",
-		"Ed Toro",
-		"Craig Sniffen",
-		"Andy Weiss",
-		"Hassan Mian",
-		"Joel Lusky",
-		"Jose Martinez-Rubio",
-		"Sam Zorbel",
-		"Alfonzo Pintos",
-		"Bayrdo Navarro",
-		"Bryce Kerley",
-		"Burt Rosenburg",
-		"Diego Lugo",
-		"Eziquiel Politzer",
-		"Frank Ortiz",
-		"Jesus Brazon",
-		"Johanna Mikkola",
-		"Johnathon Lyons",
-		"Josh Powell",
-		"Juancarlo Perez",
-		"Widney St. Louis",
-		"Juha Mikkola",
-		"Lion El'Johnson",
-		"Fulgrim",
-		"Perturabo",
-		"Jaghatai Khan",
-		"Leman Russ",
-		"Rogal Dorn",
-		"Konrad Kruze",
-		"Sanguinius",
-		"Ferrus Manus",
-		"Angron",
-		"Roboute Guilliman",
-		"Mortarion",
-		"Magnus the Red",
-		"Horus Lupercal",
-		"Logar Aurallian",
-		"Vulkan",
-		"Corvus Corax",
-		"Alpharius Omegon"
+		# "Sarah Stamper",
+		# "Barack Obama",
+		# "Rick Scott",
+		# "Charlie Crist",
+		# "Jeb Bush",
+		# "Joe Biden",
+		# "Ed Toro",
+		# "Craig Sniffen",
+		# "Andy Weiss",
+		# "Hassan Mian",
+		# "Joel Lusky",
+		# "Jose Martinez-Rubio",
+		# "Sam Zorbel",
+		# "Alfonzo Pintos",
+		# "Bayrdo Navarro",
+		# "Bryce Kerley",
+		# "Burt Rosenburg",
+		# "Diego Lugo",
+		# "Eziquiel Politzer",
+		# "Frank Ortiz",
+		# "Jesus Brazon",
+		# "Johanna Mikkola",
+		# "Johnathon Lyons",
+		# "Josh Powell",
+		# "Juancarlo Perez",
+		# "Widney St. Louis",
+		# "Juha Mikkola",
+		# "Bill Clinton",
+		# "Ronald Reagan",
 	]
 
 	REPUBLICAN_SUCCCESS = {neutral: 50, conservative: 75, liberal: 25, tea_party: 90, socialist: 10}
@@ -101,10 +85,11 @@ class CoDPerson
 		end
 	end
 
-	def recieve_stump(politician)
+	def recieve_stump(politician, primary = nil)
 		roll = rand(0..99)
 		success = retrieve_success_rate(@politics, politician.party)
 
+		# you want to roll under the success rate
 		if roll < success
 			# the person should vote for the person they agree with the most on, not just the last one they agree with
 			if roll < @best_roll
@@ -115,7 +100,7 @@ class CoDPerson
 				@best_roll = roll
 				return "You're thinking what I'm thinking!" + changed_mind_text
 			else
-				return "While I like what you are saying, #{vote.name} still has my vote."
+				return "While I like what you are saying, #{@vote.name} still has my vote."
 			end
 		else
 			return "I'll never vote for you!"
@@ -123,12 +108,19 @@ class CoDPerson
 	end
 
 	def retrieve_success_rate(politics, party)
+		return 50 if @party  # used when politicians are voting in primaries they aren't running in
+
 		case party
 		when :republican
 			REPUBLICAN_SUCCCESS[politics]
 		when :democrat
 			DEMOCRAT_SUCCCESS[politics]
 		end
+	end
+
+	def reset_vote
+		@best_roll = 100
+		@vote = nil
 	end
 end
 
@@ -164,6 +156,8 @@ class CoDPolitician < CoDPerson
 		"I am looking forward to an orderly election tomorrow, which will eliminate the need for a violent blood bath.",
 	]
 
+	PARTY_NAMES = {democrat: "Democrat", republican: "republican"}
+
 	def initialize(params ={})
 		super
 		@role = :politician
@@ -172,8 +166,17 @@ class CoDPolitician < CoDPerson
 		@active = true
 	end
 
-	def recieve_stump(*rest)
-		"I'm running against you!"
+	def recieve_stump(politician, primary = nil)
+		unless primary
+			return "I'm running against you!" 			
+		end
+
+		if primary == @party
+			return "I'm trying to get the nomination myself!"
+		else
+			@vote = nil
+			super
+		end
 	end
 
 	def give_speach
@@ -200,5 +203,10 @@ class CoDPolitician < CoDPerson
 		else
 			nil
 		end
+	end
+
+	def reset_vote
+		@best_roll = 100
+		@vote = self
 	end
 end

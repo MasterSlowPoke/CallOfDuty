@@ -16,7 +16,8 @@ class CoDGame
 	#set the game to the menu state
 	def initialize
 		@people = {}
-		process_menu 
+		@debug = false
+		set_menu_state 
 	end
 
 	def display_splash
@@ -30,13 +31,10 @@ class CoDGame
 		display_splash
 		loop do
 			CoDGraphics.display_title
-			puts @response
-			puts @state_instructions
+			display_state
 
-			input = get_command
-			command_result = nil
-			break if @quit_game
-
+			input = get_input_based_on_state
+			break if input == :exit_game
 			process_command(input)
 
 			CoDGraphics.clear_screen
@@ -45,23 +43,28 @@ class CoDGame
 		display_outro
 	end
 
+	def display_state
+		puts @response
+		puts @state_instructions 
+		puts "STATE: " + @state.to_s if @debug
+	end
+
 	def make_people
 		newPeople = [
-			CoDPerson.new({name: "guy1", politics: :socialist}),
-			CoDPerson.new({name: "guy2", politics: :tea_party}),
-			CoDPerson.new({name: "guy3", politics: :neutral}),
-			CoDPerson.new({name: "guy4", politics: :conservative}),
-			CoDPerson.new({name: "guy5", politics: :liberal}),
-			CoDPolitician.new({name: "pol1", party: :republican}),
-			CoDPolitician.new({name: "pol2", party: :democrat}),
+			CoDPerson.Random,
+			CoDPerson.Random,
+			CoDPolitician.Random,
+			CoDPolitician.Random,
+			CoDPolitician.Random,
+			CoDPolitician.Random,
+			CoDPolitician.Random,
 		]
 		newPeople.each do |person|
 			@people[person.name] = person
 		end
 	end
 
-	# Take input from the user, and return a symbol representing the command. input argument for testing
-	def get_command(input = nil)
+	def get_input_based_on_state(input = nil)
 		input = gets.chomp unless input
 
 		case @state
@@ -70,20 +73,31 @@ class CoDGame
 		when :create
 			get_create_command(input)
 		when :list
-			process_list
+			set_menu_state
 		when :create_person
-			process_create_person(input)
+			set_create_person_state(input)
 		when :update
-			process_update(input)
+			set_update_person(input)
+		when :update_person
+			set_update_person_state(input)
+		when :update_person_name
+			set_update_person_name_state(input)
+		when :update_person_partisaniization
+			set_update_person_partisaniization(input)
 		when :vote
 			process_vote
+		when :vote_primary
+			process_primaries
+		when :primary_voting_over
+			process_primary_vote
 		when :voting_over
 			process_voting_over
 		else
-			raise Exception.new("No commands valid for state:" + @state.to_s)
+			raise StandardError.new("No commands valid for state:" + @state.to_s)
 		end
 	end
 
+	# Take input from the user, and return a symbol representing the command. input argument for testing
 	def get_menu_command(input = nil)
 		case input.downcase
 		when "create", "c"
@@ -100,6 +114,9 @@ class CoDGame
 			return :quit
 		when "seed"
 			make_people
+			return :menu
+		when "d"
+			@debug = !@debug
 			return :menu
 		else
 			@response = "Not a valid command."
