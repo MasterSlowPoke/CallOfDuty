@@ -71,52 +71,42 @@ class Test_CoDGame < Minitest::Test
 
 	def test_input_command_create
 		game = CoDGame.new
-		assert_equal game.get_command("create"), :create
-		assert_equal game.get_command("Create"), :create
-		assert_equal game.get_command("C"), :create
-		assert_equal game.get_command("c"), :create
+		assert_equal game.get_menu_command("create"), :create
+		assert_equal game.get_menu_command("Create"), :create
+		assert_equal game.get_menu_command("C"), :create
+		assert_equal game.get_menu_command("c"), :create
 	end
 
 	def test_input_command_update
 		game = CoDGame.new
-		assert_equal game.get_command("update"), :update
-		assert_equal game.get_command("Update"), :update
-		assert_equal game.get_command("u"), :update
-		assert_equal game.get_command("U"), :update
+		assert_equal game.get_menu_command("update"), :update
+		assert_equal game.get_menu_command("Update"), :update
+		assert_equal game.get_menu_command("u"), :update
+		assert_equal game.get_menu_command("U"), :update
 	end
 
 	def test_input_command_vote
 		game = CoDGame.new
-		assert_equal game.get_command("vote"), :vote
-		assert_equal game.get_command("Vote"), :vote
-		assert_equal game.get_command("V"), :vote
-		assert_equal game.get_command("v"), :vote
+		assert_equal game.get_menu_command("vote"), :vote
+		assert_equal game.get_menu_command("Vote"), :vote
+		assert_equal game.get_menu_command("V"), :vote
+		assert_equal game.get_menu_command("v"), :vote
 	end
 
 	def test_input_command_list
 		game = CoDGame.new
-		assert_equal game.get_command("List"), :list
-		assert_equal game.get_command("list"), :list
-		assert_equal game.get_command("L"), :list
-		assert_equal game.get_command("l"), :list
+		assert_equal game.get_menu_command("List"), :list
+		assert_equal game.get_menu_command("list"), :list
+		assert_equal game.get_menu_command("L"), :list
+		assert_equal game.get_menu_command("l"), :list
 	end
 
 	def test_input_command_quit
 		game = CoDGame.new
-		assert_equal game.get_command("quit"), :quit
-		assert_equal game.get_command("Quit"), :quit
-		assert_equal game.get_command("q"), :quit
-		assert_equal game.get_command("Q"), :quit
-	end
-
-	def test_state_changes
-		game = CoDGame.new
-		states = [:menu, :create]
-		states.each do |state|
-			game.state = :some_weird_state
-			game.process_command(state)
-			assert_equal state, game.state
-		end
+		assert_equal game.get_menu_command("quit"), :quit
+		assert_equal game.get_menu_command("Quit"), :quit
+		assert_equal game.get_menu_command("q"), :quit
+		assert_equal game.get_menu_command("Q"), :quit
 	end
 
 	def test_return_to_menu
@@ -135,41 +125,36 @@ class Test_CoDGame < Minitest::Test
 		person.name = "fart"
 		person.politics = :tea_party
 		game.process_command(:list)
-		game.process_list
+		game.set_list_state
 	end
 
 	def test_create_people_state_changes
 		game = CoDGame.new
 		inputs = ["person", "politician"]
 		inputs.each do |input|
-			game.process_create
-			game.process_command(game.get_command(input))
-			assert_equal :create_person, game.state
+			game.set_create_state
+			game.process_command(game.get_create_command(input))
+			assert_equal :create_person_name, game.state
 		end
 	end
 
-	def test_create_person_commands
+	def test_create_person
 		game = CoDGame.new
-		game.process_create_person(:voter)
-		inputs = ["a gross bug", "4"] 
-		
-		inputs.each do |input|
-			game.process_create_person(input)
-		end
+		game.set_create_person_state(:voter)
+		game.set_create_person_name_state("a gross bug")
+		game.set_create_person_partisanization("4")
 
 		refute_nil game.people["a gross bug"]
 	end
 
 	def test_create_politician_commands
 		game = CoDGame.new
-		game.process_create_person(:politician)
-		inputs = ["pekel", "2"] 
-
-		inputs.each do |input|
-			game.process_create_person(input)
-		end
+		game.set_create_person_state(:politician)
+		game.set_create_person_name_state("pekel")
+		game.set_create_person_partisanization("2")
 
 		refute_nil game.people["pekel"]
+		assert game.people["pekel"].is_a? CoDPolitician
 	end
 
 	def test_update_autoclose
@@ -182,22 +167,12 @@ class Test_CoDGame < Minitest::Test
 		game = CoDGame.new
 		person = CoDPerson.new({name: "guy", politics: :liberal})
 		game.people["guy"] = person
-		game.process_update()
-		game.process_update("guy")
-		game.process_update("girl")
-		game.process_update("2")
+
+		game.set_update_person_state("guy")
+		game.set_update_person_name_state("girl")
+		game.set_update_person_partisanization("2")
 		
 		refute_nil game.people["girl"]
-	end
-
-	def test_vote
-		game = CoDGame.new()
-		game.make_people
-
-		game.process_vote()
-		game.process_vote(0.01)
-		game.process_voting_over(0.01)
-		refute_nil game.victor
 	end
 
 	def test_game_show_outro
