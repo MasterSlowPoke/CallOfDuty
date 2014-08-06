@@ -87,14 +87,12 @@ class CoDGame
 			set_create_person_name_state(input)
 		when :create_person_partisanization
 			set_create_person_partisanization(input)
-		when :update
-			set_update_person(input)
 		when :update_person
 			set_update_person_state(input)
 		when :update_person_name
 			set_update_person_name_state(input)
 		when :update_person_partisanization
-			set_update_person_partisaniization(input)
+			set_update_person_partisanization(input)
 		when :vote
 			set_vote_state
 		when :vote_primary_stumping

@@ -37,7 +37,7 @@ module CoDInputUpdate
 		@state = :update_person_partisanization unless @person.name.nil?
 	end
 
-	def set_update_person_partisaniization(input)
+	def set_update_person_partisanization(input)
 		process_partisanization(input)
 
 		# the person will be set to nil and the state set to :menu if the partisanization is successful 
