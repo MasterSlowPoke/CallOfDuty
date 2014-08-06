@@ -61,7 +61,7 @@ module CoDInputProcessing
 	end
 
 	### QUIT ##
-	def set_quit_state(input = nil)
+	def set_quit_state
 		:exit_game
 	end
 end

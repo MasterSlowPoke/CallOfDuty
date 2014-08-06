@@ -1,6 +1,7 @@
 require "./cod_graphics.rb"
 require "./cod_input_processing.rb"
 require "./cod_person.rb"
+require "./cod_politician.rb"
 
 class CoDGame
 	attr_reader :person
@@ -59,8 +60,9 @@ class CoDGame
 			CoDPolitician.Random,
 			CoDPolitician.Random,
 			CoDPolitician.Random,
-			CoDPolitician.new({name: "The Democrat",party: "1"}),
-			CoDPolitician.new({name: "Republican Man",party: "2"}),
+			CoDPolitician.Random,
+			CoDPolitician.Random,
+			CoDPolitician.Random,
 		]
 		newPeople.each do |person|
 			@people[person.name] = person

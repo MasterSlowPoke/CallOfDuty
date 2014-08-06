@@ -67,30 +67,30 @@ module CoDInputCreate
 		@person.name = input
 		@response = "Accepted \"#{@person.name}\"."
 
-		if(@person.role == :voter)
-			@state_instructions = "The person's politicial leanings? You can use the number as a shortcut. \n(1) Liberal, (2) Conservative, (3) Tea Party, (4) Socialist, or (5) Neutral?"
-		else
+		if @person.is_a? CoDPolitician
 			@state_instructions = "The politician's party? You can use the number as a shortcut. \n(1) Democrat or (2) Republican? Do you want to vote third party? Go ahead, throw your vote away!"
+		else
+			@state_instructions = "The person's politicial leanings? You can use the number as a shortcut. \n(1) Liberal, (2) Conservative, (3) Tea Party, (4) Socialist, or (5) Neutral?"
 		end
 	end
 
 	def process_partisanization(input)
 		responseString = ""
 
-		if(@person.role == :voter)
-			@person.politics = input
-			if @person.politics.nil?
-				@response = "Not a valid political affiliation."
-				return
-			end
-			responseString = "Person '#{@person.name}' with politics '#{@person.politics}' created!"
-		else
+		if(@person.is_a? CoDPolitician)
 			@person.party = input
 			if @person.party.nil?
 				@response = "Not a valid party."
 				return
 			end
 			responseString = "Politician '#{@person.name}' of the party '#{@person.party}' created!"
+		else
+			@person.politics = input
+			if @person.politics.nil?
+				@response = "Not a valid political affiliation."
+				return
+			end
+			responseString = "Person '#{@person.name}' with politics '#{@person.politics}' created!"
 		end
 
 		# return to the menu state, but with a succssful response string, and add the person to the master list, and delete the temp person
