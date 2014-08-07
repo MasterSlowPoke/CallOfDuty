@@ -12,10 +12,10 @@ module CoDInputVote
 			@people[name].is_a?(CoDPolitician) && @people[name].active?
 		}
 
-		@active_primary = get_primary
+		@active_primary = get_current_primary
 	end
 
-	def get_primary
+	def get_current_primary
 		candidates = {}
 
 		@politicians.each do |name, politician|
@@ -124,7 +124,7 @@ module CoDInputVote
 				sleep DELAY
 
 				response = person.recieve_stump(politician, @active_primary)
-				puts "       #{per_name} responds: \"#{response}\""
+				puts "       #{per_name} responds: \"#{response}\"\n\n"
 				sleep DELAY
 			end
 			puts ""

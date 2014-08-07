@@ -37,7 +37,7 @@ class CoDGame
 			CoDGraphics.display_title
 			display_state
 
-			input = get_input_based_on_state
+			input = handle_input_based_on_state
 			break if input == :exit_game
 			process_command(input)
 
@@ -69,14 +69,14 @@ class CoDGame
 		end
 	end
 
-	def get_input_based_on_state(input = nil)
+	def handle_input_based_on_state(input = nil)
 		input = gets.chomp unless input
 
 		case @state
 		when :menu
-			get_menu_command(input)
+			process_menu_command(input)
 		when :create_person_or_politician
-			get_create_command(input)
+			process_create_command(input)
 		when :list
 			set_menu_state
 		when :create_person
@@ -109,7 +109,7 @@ class CoDGame
 	end
 
 	# Take input from the user, and return a symbol representing the command. input argument for testing
-	def get_menu_command(input = nil)
+	def process_menu_command(input = nil)
 		case input.downcase
 		when "create", "c"
 			return :create
@@ -135,7 +135,7 @@ class CoDGame
 		end
 	end
 
-	def get_create_command(input = nil)
+	def process_create_command(input = nil)
 		case input.downcase
 		when "person", "per"
 			return :create_person
