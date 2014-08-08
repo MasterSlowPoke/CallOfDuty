@@ -102,7 +102,7 @@ module CoDInputVote
 		if(@winners.length > 1)
 			puts "The election ends in a tie! The country tears itself apart trying to solve the Great Electoral Schism. America is dead."
 		else
-			puts "Politician #{@victor} has secured the presidency, and gives an amazing victory speach!\n \"I am #{@victor}. As overlord, all will kneel trembling before me and obey my brutal commands.\""
+			puts "Politician #{@victor} has secured the presidency, and gives an amazing victory speach!\n\"I am #{@victor}. As overlord, all will kneel trembling before me and obey my brutal commands.\""
 		end
 		gets
 		set_quit_state

@@ -30,6 +30,13 @@ class CoDPolitician < CoDPerson
 		"I am looking forward to an orderly election tomorrow, which will eliminate the need for a violent blood bath.",
 	]
 
+	def self.Random
+		names_count = @@random_names.length
+		return nil if names_count == 0
+
+		CoDPolitician.new ({name: self.SelectName(names_count), party: rand(1..2).to_s})
+	end
+
 	def initialize(params ={})
 		super
 		self.party = params[:party]
@@ -57,16 +64,22 @@ class CoDPolitician < CoDPerson
 		end
 	end
 
-	def give_speach
-		STUMPS.sample
+	# used when politicians are voting in primaries they aren't running in
+	def retrieve_success_rate(stumping_party, current_primary)
+		#if the stumping politician is the same party, yes 3/4hs the time
+		if stumping_party == @party
+			75
+		#if there isn't a primary and the politician is of a different party, only 1/3rd the time
+		elsif current_primary.nil?
+			33
+		#if there is a primary and it's not the politician's party, 1/2th the time
+		else
+			50 
+		end
 	end
 
-
-	def self.Random
-		names_count = @@random_names.length
-		return nil if names_count == 0
-
-		CoDPolitician.new ({name: self.SelectName(names_count), party: rand(1..2).to_s})
+	def give_speach
+		STUMPS.sample
 	end
 
 	def party= (alignment)

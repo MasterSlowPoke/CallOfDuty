@@ -87,7 +87,7 @@ class CoDPerson
 
 	def recieve_stump(politician, primary = nil)
 		roll = rand(0..99)
-		success = retrieve_success_rate(@politics, politician.party)
+		success = retrieve_success_rate(politician.party, primary)
 
 		# you want to roll under the success rate
 		if roll < success
@@ -107,21 +107,12 @@ class CoDPerson
 		end
 	end
 
-	def retrieve_success_rate(politics, party)
-		# used when politicians are voting in primaries they aren't running in
-		if @party  
-			if @party == party
-				return 75
-			else
-				return 50 
-			end
-		end
-
+	def retrieve_success_rate(party, current_primary)
 		case party
 		when :republican
-			REPUBLICAN_SUCCCESS[politics]
+			REPUBLICAN_SUCCCESS[@politics]
 		when :democrat
-			DEMOCRAT_SUCCCESS[politics]
+			DEMOCRAT_SUCCCESS[@politics]
 		end
 	end
 
