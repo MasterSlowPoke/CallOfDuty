@@ -28,6 +28,7 @@ class CoDPolitician < CoDPerson
 		"We must move forward, not backward, upward not forward, and always twirling, twirling, twirling towards freedom!",
 		"The politics of failure have failed. We need to make them work again.",
 		"I am looking forward to an orderly election tomorrow, which will eliminate the need for a violent blood bath.",
+		"There will be weekly runing, yoga and go karts!",
 	]
 
 	def self.Random
