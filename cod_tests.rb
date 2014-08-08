@@ -71,42 +71,42 @@ class Test_CoDGame < Minitest::Test
 
 	def test_input_command_create
 		game = CoDGame.new
-		assert_equal game.get_menu_command("create"), :create
-		assert_equal game.get_menu_command("Create"), :create
-		assert_equal game.get_menu_command("C"), :create
-		assert_equal game.get_menu_command("c"), :create
+		assert_equal game.process_menu_command("create"), :create
+		assert_equal game.process_menu_command("Create"), :create
+		assert_equal game.process_menu_command("C"), :create
+		assert_equal game.process_menu_command("c"), :create
 	end
 
 	def test_input_command_update
 		game = CoDGame.new
-		assert_equal game.get_menu_command("update"), :update
-		assert_equal game.get_menu_command("Update"), :update
-		assert_equal game.get_menu_command("u"), :update
-		assert_equal game.get_menu_command("U"), :update
+		assert_equal game.process_menu_command("update"), :update
+		assert_equal game.process_menu_command("Update"), :update
+		assert_equal game.process_menu_command("u"), :update
+		assert_equal game.process_menu_command("U"), :update
 	end
 
 	def test_input_command_vote
 		game = CoDGame.new
-		assert_equal game.get_menu_command("vote"), :vote
-		assert_equal game.get_menu_command("Vote"), :vote
-		assert_equal game.get_menu_command("V"), :vote
-		assert_equal game.get_menu_command("v"), :vote
+		assert_equal game.process_menu_command("vote"), :vote
+		assert_equal game.process_menu_command("Vote"), :vote
+		assert_equal game.process_menu_command("V"), :vote
+		assert_equal game.process_menu_command("v"), :vote
 	end
 
 	def test_input_command_list
 		game = CoDGame.new
-		assert_equal game.get_menu_command("List"), :list
-		assert_equal game.get_menu_command("list"), :list
-		assert_equal game.get_menu_command("L"), :list
-		assert_equal game.get_menu_command("l"), :list
+		assert_equal game.process_menu_command("List"), :list
+		assert_equal game.process_menu_command("list"), :list
+		assert_equal game.process_menu_command("L"), :list
+		assert_equal game.process_menu_command("l"), :list
 	end
 
 	def test_input_command_quit
 		game = CoDGame.new
-		assert_equal game.get_menu_command("quit"), :quit
-		assert_equal game.get_menu_command("Quit"), :quit
-		assert_equal game.get_menu_command("q"), :quit
-		assert_equal game.get_menu_command("Q"), :quit
+		assert_equal game.process_menu_command("quit"), :quit
+		assert_equal game.process_menu_command("Quit"), :quit
+		assert_equal game.process_menu_command("q"), :quit
+		assert_equal game.process_menu_command("Q"), :quit
 	end
 
 	def test_return_to_menu
@@ -133,7 +133,7 @@ class Test_CoDGame < Minitest::Test
 		inputs = ["person", "politician"]
 		inputs.each do |input|
 			game.set_create_state
-			game.process_command(game.get_create_command(input))
+			game.process_command(game.process_create_command(input))
 			assert_equal :create_person_name, game.state
 		end
 	end
